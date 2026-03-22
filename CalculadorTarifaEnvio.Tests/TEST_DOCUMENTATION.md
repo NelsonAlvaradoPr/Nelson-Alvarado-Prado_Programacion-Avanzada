@@ -2,11 +2,12 @@
 
 ## Descripción General
 
-La suite de pruebas unitarias de `CalculadorTarifaEnvio` garantiza **estabilidad del sistema** después de cada cambio mediante pruebas exhaustivas y backward-compatible.
+La suite de pruebas unitarias de `CalculadorTarifaEnvio` garantiza **estabilidad del sistema** después de cada cambio mediante pruebas exhaustivas y backward-compatible. Incluye pruebas para funcionalidades avanzadas de enrutamiento inteligente con detección automática de rutas óptimas.
 
 **Framework utilizado:** xUnit  
 **Lenguaje:** C#  
-**Target:** .NET 8.0
+**Target:** .NET 8.0  
+**Total de pruebas:** 48 pruebas organizadas en 8 categorías
 
 ## Cómo Ejecutar las Pruebas
 
@@ -209,6 +210,36 @@ dotnet test --filter "Category=Integration"
   - Todos los registros creados correctamente
 ```
 
+### 8. Enrutamiento Avanzado (Advanced Routing) - **8 pruebas**
+
+**Objetivo:** Validar las nuevas funcionalidades avanzadas de enrutamiento inteligente.
+
+```
+✓ CalcularTarifaEnvioAvanzado_WithDirectRoute_ShouldReturnDirectCostAndLog
+  - Ruta directa SJO→MIA (15.5 kg) = $38.75 con log detallado
+
+✓ CalcularTarifaEnvioAvanzado_WithTransbordoRoute_ShouldFindIntermediateAndLog
+  - Transbordo NYC→SJO→LAX (10 kg) = $45.00 con log de segmentos
+
+✓ CalcularTarifaEnvioAvanzado_WithReverseRoute_ShouldApplySurchargeAndLog
+  - Ruta inversa LAX→SJO (10 kg) = $27.50 (25.00 + 10% surcharge)
+
+✓ CalcularTarifaEnvioAvanzado_WithUnknownZone_ShouldThrowZonaDesconocidaException
+  - Zona desconocida lanza ZonaDesconocidaException personalizada
+
+✓ CalcularTarifaEnvioAvanzado_WithNoViableRoute_ShouldThrowKeyNotFoundException
+  - Sin ruta viable lanza KeyNotFoundException con mensaje específico
+
+✓ CalcularTarifaEnvioAvanzado_ShouldRoundToTwoDecimals
+  - Redondeo automático: 7.33 × 1.50 = $10.995 → $11.00
+
+✓ CalcularTarifaEnvioAvanzado_LogFormat_ShouldMatchExactSpecification
+  - Formato exacto: "On dd-MM-yyyy HH:mm:ss, a shipment of xxx kg..."
+
+✓ CalcularTarifaEnvioAvanzado_ComplexTransbordo_ShouldFindOptimalIntermediate
+  - Transbordo complejo TGU→MIA→MAD (20 kg) = $190.00
+```
+
 ## Resumen de Cobertura
 
 | Categoría | Pruebas | Estado |
@@ -220,7 +251,8 @@ dotnet test --filter "Category=Integration"
 | Inversa + Surcharge | 4 | ✅ Completada |
 | Cumulativa | 8 | ✅ Completada |
 | Integración | 3 | ✅ Completada |
-| **TOTAL** | **34+** | ✅ **Completada** |
+| **Enrutamiento Avanzado** | **8** | ✅ **Completada** |
+| **TOTAL** | **48** | ✅ **Completada** |
 
 *Nota: La prueba de envíos directos usa parametrización adicional.*
 

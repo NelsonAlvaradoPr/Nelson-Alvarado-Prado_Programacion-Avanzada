@@ -19,7 +19,7 @@ namespace CalculadorTarifaEnvio.Tests
         {
             _calculadora = new TarifaEnvioCalculadora();
             
-            // Definir tarifas base para pruebas
+            // Definir tarifas base para pruebas (ampliado para pruebas avanzadas)
             _tarifasBase = new Dictionary<string, decimal>
             {
                 { "SJO-MIA", 2.50m },
@@ -27,9 +27,12 @@ namespace CalculadorTarifaEnvio.Tests
                 { "SJO-LAX", 1.50m },
                 { "MIA-SJO", 2.50m },
                 { "MIA-LAX", 3.50m },
+                { "MIA-MAD", 5.50m },  // Madrid
                 { "NYC-SJO", 3.00m },
                 { "LAX-SJO", 1.50m },
-                { "LAX-MIA", 3.50m }
+                { "LAX-MIA", 3.50m },
+                { "TGU-MIA", 4.00m },  // Tegucigalpa
+                { "MAD-MIA", 5.50m }   // Madrid → Miami (reverse)
             };
         }
 
@@ -613,6 +616,168 @@ namespace CalculadorTarifaEnvio.Tests
             var registros = _calculadora.ObtenerRegistros();
             Assert.Equal(operaciones.Count, registros.Count);
             Assert.All(registros, r => Assert.Matches(@"\[\d{4}-\d{2}-\d{2}", r));
+        }
+
+        #endregion
+
+        #region Test Advanced Shipping Calculator (New Requirements)
+
+        [Fact]
+        [Trait("Category", "Advanced Routing")]
+        public void CalcularTarifaEnvioAvanzado_WithDirectRoute_ShouldReturnDirectCostAndLog()
+        {
+            // Arrange
+            decimal peso = 15.5m;
+            decimal expected = 38.75m; // 15.5 * 2.50
+
+            // Act
+            decimal resultado = _calculadora.CalcularTarifaEnvioAvanzado(
+                peso, "SJO", "MIA", _tarifasBase, out string operationLog);
+
+            // Assert
+            Assert.Equal(expected, resultado);
+            Assert.Contains("On", operationLog);
+            Assert.Contains("15.5 kg was processed from SJO to MIA", operationLog);
+            Assert.Contains("Total cost calculated: 38.75", operationLog);
+        }
+
+        [Fact]
+        [Trait("Category", "Advanced Routing")]
+        public void CalcularTarifaEnvioAvanzado_WithTransbordoRoute_ShouldFindIntermediateAndLog()
+        {
+            // Arrange - NYC to LAX has no direct route, but NYC->SJO->LAX exists
+            decimal peso = 10.0m;
+            // NYC->SJO: 10 * 3.00 = 30.00
+            // SJO->LAX: 10 * 1.50 = 15.00
+            // Total: 45.00
+            decimal expected = 45.00m;
+
+            // Act
+            decimal resultado = _calculadora.CalcularTarifaEnvioAvanzado(
+                peso, "NYC", "LAX", _tarifasBase, out string operationLog);
+
+            // Assert
+            Assert.Equal(expected, resultado);
+            Assert.Contains("Note: A direct route was NOT found", operationLog);
+            Assert.Contains("route with a transfer was found going from NYC to SJO and then to LAX", operationLog);
+            Assert.Contains("30.00 + 15.00 = 45.00", operationLog);
+        }
+
+        [Fact]
+        [Trait("Category", "Advanced Routing")]
+        public void CalcularTarifaEnvioAvanzado_WithReverseRoute_ShouldApplySurchargeAndLog()
+        {
+            // Arrange - Create a scenario where reverse is needed
+            // For this test, we'll use a route that might prefer reverse over transbordo
+            // Let's use a custom tariff set where reverse is the only option
+            var tarifasLimitadas = new Dictionary<string, decimal>
+            {
+                { "SJO-MIA", 2.50m },
+                { "MIA-SJO", 2.50m },
+                { "SJO-LAX", 2.50m }  // Add this so LAX exists, but no LAX-SJO direct route
+            };
+            decimal peso = 10.0m;
+            // Direct MIA->SJO exists, so it should use direct route: 10 * 2.50 = 25.00
+            // But to test reverse, we need MIA to some destination that doesn't have direct
+            // Let's change to SJO to LAX, where LAX has no direct route to SJO, but SJO-LAX exists
+            // Wait, better: let's use LAX to SJO, where direct doesn't exist but reverse SJO-LAX does
+            decimal expected = 27.50m; // 10 * 2.50 * 1.10 = 27.50 (reverse of SJO-LAX)
+
+            // Act
+            decimal resultado = _calculadora.CalcularTarifaEnvioAvanzado(
+                peso, "LAX", "SJO", tarifasLimitadas, out string operationLog);
+
+            // Assert
+            Assert.Equal(expected, resultado);
+            Assert.Contains("Note: A direct route was NOT found", operationLog);
+            Assert.Contains("reverse route was found with a surcharge of 10%", operationLog);
+            Assert.Contains("25.00 + 2.50 (10%) = 27.50", operationLog);
+        }
+
+        [Fact]
+        [Trait("Category", "Advanced Routing")]
+        public void CalcularTarifaEnvioAvanzado_WithUnknownZone_ShouldThrowZonaDesconocidaException()
+        {
+            // Act & Assert
+            var exception = Assert.Throws<ZonaDesconocidaException>(() =>
+                _calculadora.CalcularTarifaEnvioAvanzado(
+                    10.0m, "INVALID", "MIA", _tarifasBase, out string _));
+
+            Assert.Equal("INVALID", exception.ZonaInvalida);
+            Assert.Contains("INVALID", exception.Message);
+        }
+
+        [Fact]
+        [Trait("Category", "Advanced Routing")]
+        public void CalcularTarifaEnvioAvanzado_WithNoViableRoute_ShouldThrowKeyNotFoundException()
+        {
+            // Arrange - Isolated routes with no connections between them
+            var tarifasAisladas = new Dictionary<string, decimal>
+            {
+                { "ORD-MIA", 3.00m },  // Chicago to Miami
+                { "LAX-SJO", 2.00m }   // LA to San Jose (completely separate network)
+            };
+
+            // Act & Assert
+            var exception = Assert.Throws<KeyNotFoundException>(() =>
+                _calculadora.CalcularTarifaEnvioAvanzado(
+                    10.0m, "ORD", "LAX", tarifasAisladas, out string _));
+
+            Assert.Contains("No se encontró ruta viable", exception.Message);
+        }
+
+        [Fact]
+        [Trait("Category", "Advanced Routing")]
+        public void CalcularTarifaEnvioAvanzado_ShouldRoundToTwoDecimals()
+        {
+            // Arrange - Create a calculation that results in more than 2 decimals
+            decimal peso = 7.33m;
+            // 7.33 * 1.50 = 10.995 → should round to 11.00
+            decimal expected = 11.00m;
+
+            // Act
+            decimal resultado = _calculadora.CalcularTarifaEnvioAvanzado(
+                peso, "SJO", "LAX", _tarifasBase, out string operationLog);
+
+            // Assert
+            Assert.Equal(expected, resultado);
+            Assert.Contains("Total cost calculated: 11.00", operationLog);
+        }
+
+        [Fact]
+        [Trait("Category", "Advanced Routing")]
+        public void CalcularTarifaEnvioAvanzado_LogFormat_ShouldMatchExactSpecification()
+        {
+            // Arrange
+            decimal peso = 15.5m;
+
+            // Act
+            _calculadora.CalcularTarifaEnvioAvanzado(
+                peso, "SJO", "MIA", _tarifasBase, out string operationLog);
+
+            // Assert - Verify exact format: "On dd-MM-yyyy HH:mm:ss, a shipment of xxx kg was processed from <origin> to <destination>. Total cost calculated: yyy."
+            Assert.Matches(@"^On \d{2}-\d{2}-\d{4} \d{2}:\d{2}:\d{2}, a shipment of 15\.5 kg was processed from SJO to MIA\. Total cost calculated: 38\.75\.$", operationLog);
+        }
+
+        [Fact]
+        [Trait("Category", "Advanced Routing")]
+        public void CalcularTarifaEnvioAvanzado_ComplexTransbordo_ShouldFindOptimalIntermediate()
+        {
+            // Arrange - TGU to MAD: no direct, but TGU->MIA->MAD exists
+            decimal peso = 20.0m;
+            // TGU->MIA: 20 * 4.00 = 80.00
+            // MIA->MAD: 20 * 5.50 = 110.00
+            // Total: 190.00
+            decimal expected = 190.00m;
+
+            // Act
+            decimal resultado = _calculadora.CalcularTarifaEnvioAvanzado(
+                peso, "TGU", "MAD", _tarifasBase, out string operationLog);
+
+            // Assert
+            Assert.Equal(expected, resultado);
+            Assert.Contains("route with a transfer was found going from TGU to MIA and then to MAD", operationLog);
+            Assert.Contains("80.00 + 110.00 = 190.00", operationLog);
         }
 
         #endregion
