@@ -1,0 +1,402 @@
+@using VehicleMvcApp.Models;
+@model VehicleSearchViewModel
+
+@{
+    ViewData["Title"] = "Vehicle Search - Vehicle Management System";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --info: #16a085;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background-color: var(--primary) !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .container-main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 1.5rem;
+            border: none;
+        }
+
+        .data-source-badge {
+            display: inline-block;
+            background-color: #fff3cd;
+            color: #664d03;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .data-source-badge.json {
+            background-color: #e7f3ff;
+            color: #004085;
+            border-left: 4px solid #0066cc;
+        }
+
+        .data-source-badge.database {
+            background-color: #e8f5e9;
+            color: #1b5e20;
+            border-left: 4px solid #4caf50;
+        }
+
+        .badge {
+            padding: 0.5rem 0.8rem;
+            font-weight: 500;
+        }
+
+        .badge-sedan {
+            background-color: #dfe6e9;
+            color: #2d3436;
+        }
+
+        .badge-4x4 {
+            background-color: #fab1a0;
+            color: #d63031;
+        }
+
+        .badge-motorcycle {
+            background-color: #74b9ff;
+            color: #0050b3;
+        }
+
+        .btn {
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--secondary);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success);
+            border: none;
+        }
+
+        .btn-info {
+            background: var(--info);
+            border: none;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            border: none;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            border: none;
+        }
+
+        .table {
+            background-color: white;
+            margin-bottom: 0;
+        }
+
+        .table thead {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .table tbody tr {
+            transition: background-color 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .alert {
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #664d03;
+            border-left: 4px solid #f39c12;
+        }
+
+        .alert-danger {
+            background-color: #fadbd8;
+            color: #78281f;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #7f8c8d;
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            color: #bdc3c7;
+            margin-bottom: 1rem;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .system-info {
+            background-color: #f0f8ff;
+            border-left: 4px solid var(--secondary);
+            padding: 1rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .system-info strong {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-car"></i> Vehicle Manager
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Vehicles")">
+                            <i class="fas fa-list"></i> Vehicles
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Create", "Vehicles")">
+                            <i class="fas fa-plus"></i> Add Vehicle
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("SystemInfo", "Vehicles")">
+                            <i class="fas fa-info-circle"></i> System Info
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-main">
+        <!-- Data Source Badge -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <span class="data-source-badge @(Model.DataSource.Contains("Database") ? "database" : "json")">
+                    <i class="@(Model.DataSource.Contains("Database") ? "fas fa-database" : "fas fa-file-json")"></i>
+                    Data Source: <strong>@Model.DataSource</strong>
+                </span>
+            </div>
+        </div>
+
+        <!-- Search Panel -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3><i class="fas fa-search"></i> Search Vehicles by Year Range</h3>
+            </div>
+            <div class="card-body">
+                <form method="GET" action="@Url.Action("Index", "Vehicles")">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="minYear" class="form-label">Minimum Year</label>
+                            <input type="number" class="form-control" id="minYear" name="minYear" 
+                                   value="@Model.MinYear" min="1900" max="@Model.CurrentYear" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="maxYear" class="form-label">Maximum Year</label>
+                            <input type="number" class="form-control" id="maxYear" name="maxYear" 
+                                   value="@Model.MaxYear" min="1900" max="@Model.CurrentYear" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">&nbsp;</label>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        @if (Model.HasError)
+        {
+            <div class="alert alert-danger" role="alert">
+                <i class="fas fa-exclamation-circle"></i> @Model.Message
+            </div>
+        }
+
+        <!-- Success Message -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <!-- Results Section -->
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3><i class="fas fa-list"></i> Vehicles Found: @Model.ResultCount</h3>
+                    <a href="@Url.Action("Create", "Vehicles")" class="btn btn-success btn-sm">
+                        <i class="fas fa-plus"></i> Add New Vehicle
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.Vehicles.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Color</th>
+                                    <th>Year</th>
+                                    <th>Make</th>
+                                    <th>Type</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var vehicle in Model.Vehicles)
+                                {
+                                    <tr>
+                                        <td><strong>#@vehicle.Id</strong></td>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div style="width: 20px; height: 20px; border-radius: 3px; background-color: @vehicle.Color.ToLower(); border: 1px solid #ddd;"></div>
+                                                @vehicle.Color
+                                            </div>
+                                        </td>
+                                        <td><strong>@vehicle.Year</strong></td>
+                                        <td>@vehicle.Make</td>
+                                        <td>
+                                            <span class="badge badge-@vehicle.Type.ToLower()">
+                                                <i class="fas fa-car"></i> @vehicle.Type.ToUpper()
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-1 justify-content-center">
+                                                <a href="@Url.Action("Details", "Vehicles", new { id = vehicle.Id })" 
+                                                   class="btn btn-info btn-sm" title="View Details">
+                                                    <i class="fas fa-eye"></i> View
+                                                </a>
+                                                <a href="@Url.Action("Edit", "Vehicles", new { id = vehicle.Id })" 
+                                                   class="btn btn-warning btn-sm" title="Edit Vehicle">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </a>
+                                                <a href="@Url.Action("Delete", "Vehicles", new { id = vehicle.Id })" 
+                                                   class="btn btn-danger btn-sm" title="Delete Vehicle">
+                                                    <i class="fas fa-trash"></i> Delete
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <h5>No vehicles found</h5>
+                        <p>Try adjusting your search criteria or add a new vehicle.</p>
+                        <a href="@Url.Action("Create", "Vehicles")" class="btn btn-primary btn-sm mt-3">
+                            <i class="fas fa-plus"></i> Add Vehicle
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- System Information -->
+        <div class="system-info mt-4">
+            <strong>📊 Current Filter:</strong> Years @Model.MinYear - @Model.MaxYear |
+            <strong>🔌 Data Source:</strong> @Model.DataSource |
+            <strong>📈 Results:</strong> @Model.ResultCount vehicle(s)
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Vehicle Management System (ASP.NET Core MVC) | 
+           Data Source: <strong>@Model.DataSource</strong></p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

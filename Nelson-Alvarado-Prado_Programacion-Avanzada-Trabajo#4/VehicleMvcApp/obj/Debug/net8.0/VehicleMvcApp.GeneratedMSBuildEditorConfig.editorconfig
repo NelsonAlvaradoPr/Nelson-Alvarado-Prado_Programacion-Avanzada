@@ -1,0 +1,47 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = VehicleMvcApp
+build_property.RootNamespace = VehicleMvcApp
+build_property.ProjectDir = C:\Temp\git\Nelson-Alvarado-Prado_Programacion-Avanzada\Nelson-Alvarado-Prado_Programacion-Avanzada-Trabajo#4\VehicleMvcApp\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Temp\git\Nelson-Alvarado-Prado_Programacion-Avanzada\Nelson-Alvarado-Prado_Programacion-Avanzada-Trabajo#4\VehicleMvcApp
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Temp/git/Nelson-Alvarado-Prado_Programacion-Avanzada/Nelson-Alvarado-Prado_Programacion-Avanzada-Trabajo\#4/VehicleMvcApp/Views/Vehicles/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVoaWNsZXNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Temp/git/Nelson-Alvarado-Prado_Programacion-Avanzada/Nelson-Alvarado-Prado_Programacion-Avanzada-Trabajo\#4/VehicleMvcApp/Views/Vehicles/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVoaWNsZXNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Temp/git/Nelson-Alvarado-Prado_Programacion-Avanzada/Nelson-Alvarado-Prado_Programacion-Avanzada-Trabajo\#4/VehicleMvcApp/Views/Vehicles/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVoaWNsZXNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Temp/git/Nelson-Alvarado-Prado_Programacion-Avanzada/Nelson-Alvarado-Prado_Programacion-Avanzada-Trabajo\#4/VehicleMvcApp/Views/Vehicles/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVoaWNsZXNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Temp/git/Nelson-Alvarado-Prado_Programacion-Avanzada/Nelson-Alvarado-Prado_Programacion-Avanzada-Trabajo\#4/VehicleMvcApp/Views/Vehicles/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVoaWNsZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Temp/git/Nelson-Alvarado-Prado_Programacion-Avanzada/Nelson-Alvarado-Prado_Programacion-Avanzada-Trabajo\#4/VehicleMvcApp/Views/Vehicles/SystemInfo.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVoaWNsZXNcU3lzdGVtSW5mby5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 

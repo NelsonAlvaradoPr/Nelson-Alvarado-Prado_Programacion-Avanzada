@@ -1,0 +1,358 @@
+@{
+    ViewData["Title"] = "System Information";
+    var systemInfo = (dynamic)ViewBag.SystemInfo;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --info: #16a085;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background-color: var(--primary) !important;
+        }
+
+        .container-main {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 1.5rem;
+        }
+
+        .info-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .info-value {
+            color: #2c3e50;
+            font-size: 1.05rem;
+            font-family: 'Courier New', monospace;
+            background-color: #f8f9fa;
+            padding: 0.5rem;
+            border-radius: 3px;
+        }
+
+        .badge-source {
+            display: inline-block;
+            padding: 0.75rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .badge-database {
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .badge-json {
+            background-color: #cfe2ff;
+            color: #084298;
+            border-left: 4px solid #0d6efd;
+        }
+
+        .alert {
+            border-radius: 8px;
+            border: none;
+        }
+
+        .btn {
+            border-radius: 5px;
+            font-weight: 500;
+        }
+
+        .code-block {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+        }
+
+        footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-car"></i> Vehicle Manager
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Vehicles")">
+                            <i class="fas fa-list"></i> Vehicles
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("SystemInfo", "Vehicles")">
+                            <i class="fas fa-info-circle"></i> System Info
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-main">
+        <!-- Data Source Status -->
+        <div class="row">
+            <div class="col-md-6">
+                <span class="badge-source @(systemInfo.UseDatabase ? "badge-database" : "badge-json")">
+                    <i class="@(systemInfo.UseDatabase ? "fas fa-database" : "fas fa-file-json")"></i>
+                    @systemInfo.DataSource
+                </span>
+            </div>
+        </div>
+
+        <!-- Configuration Card -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-cog"></i> Configuration & Data Source</h3>
+            </div>
+            <div class="card-body">
+                <div class="info-item">
+                    <div class="info-label">📊 Current Data Source</div>
+                    <div class="info-value">@systemInfo.DataSource</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">🔌 Repository Type</div>
+                    <div class="info-value">@systemInfo.RepositoryType</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">🗄️ Use Database</div>
+                    <div class="info-value">
+                        <span class="badge @(systemInfo.UseDatabase ? "bg-success" : "bg-secondary")">
+                            @(systemInfo.UseDatabase ? "Yes" : "No")
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Source Details Card -->
+        @if (systemInfo.UseDatabase)
+        {
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-database"></i> Database Configuration</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-success" role="alert">
+                        <i class="fas fa-check-circle"></i>
+                        <strong>Database Mode Enabled</strong> - The application is querying data from MySQL database.
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Database Type</div>
+                        <div class="info-value">MySQL</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Connection String</div>
+                        <div class="code-block">
+                            @systemInfo.ConnectionString
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Table Name</div>
+                        <div class="info-value">PRQ_Cars</div>
+                    </div>
+
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-lightbulb"></i>
+                        <strong>Tip:</strong> Edit the <span class="highlight">appsettings.json</span> file and set 
+                        <span class="highlight">"UseDatabase": false</span> to switch to JSON file storage.
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-file-json"></i> JSON File Configuration</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>JSON Mode Enabled</strong> - The application is reading data from JSON files.
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Data Source Type</div>
+                        <div class="info-value">JSON File Storage</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">JSON File Path</div>
+                        <div class="code-block">
+                            @systemInfo.JsonFilePath
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Repository Type</div>
+                        <div class="info-value">JsonVehicleRepository</div>
+                    </div>
+
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fas fa-lightbulb"></i>
+                        <strong>Tip:</strong> Edit the <span class="highlight">appsettings.json</span> file and set 
+                        <span class="highlight">"UseDatabase": true</span> to switch to MySQL database storage.
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Application Settings Card -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-sliders"></i> Application Settings</h3>
+            </div>
+            <div class="card-body">
+                <div class="info-item">
+                    <div class="info-label">Current Year</div>
+                    <div class="info-value">@systemInfo.CurrentYear</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Default Minimum Year</div>
+                    <div class="info-value">@systemInfo.DefaultMinYear</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Default Maximum Year</div>
+                    <div class="info-value">@systemInfo.DefaultMaxYear</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How to Switch Data Sources -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-exchange-alt"></i> How to Switch Data Sources</h3>
+            </div>
+            <div class="card-body">
+                <h5 class="mb-3">Step 1: Open appsettings.json</h5>
+                <p>Located in the project root directory.</p>
+
+                <h5 class="mb-3">Step 2: Find the DataSource Section</h5>
+                <div class="code-block">
+"DataSource": {<br/>
+&nbsp;&nbsp;"UseDatabase": false,<br/>
+&nbsp;&nbsp;"DatabaseType": "MySQL",<br/>
+&nbsp;&nbsp;"JsonFilePath": "../prq_cars.json",<br/>
+&nbsp;&nbsp;"ConnectionString": "Server=localhost;..."<br/>
+}
+                </div>
+
+                <h5 class="mb-3">Step 3: Change UseDatabase Value</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>To use JSON files:</strong>
+                        <div class="code-block">"UseDatabase": <span class="highlight">false</span></div>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>To use Database:</strong>
+                        <div class="code-block">"UseDatabase": <span class="highlight">true</span></div>
+                    </div>
+                </div>
+
+                <h5 class="mb-3 mt-3">Step 4: Restart the Application</h5>
+                <p>Stop and run the application again to apply changes.</p>
+
+                <div class="alert alert-success" role="alert">
+                    <i class="fas fa-check-circle"></i>
+                    The application will automatically use the selected data source!
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex gap-2 justify-content-center mt-4 mb-4">
+            <a href="@Url.Action("Index", "Vehicles")" class="btn btn-primary">
+                <i class="fas fa-car"></i> View Vehicles
+            </a>
+            <a href="@Url.Action("Create", "Vehicles")" class="btn btn-success">
+                <i class="fas fa-plus"></i> Add Vehicle
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Vehicle Management System (ASP.NET Core MVC) | 
+           Data Source: <strong>@systemInfo.DataSource</strong></p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

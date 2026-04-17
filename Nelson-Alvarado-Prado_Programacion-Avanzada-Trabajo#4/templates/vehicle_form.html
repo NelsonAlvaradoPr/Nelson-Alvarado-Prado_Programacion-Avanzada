@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block title %}{% if vehicle %}Edit Vehicle{% else %}Create New Vehicle{% endif %} - Vehicle Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 offset-lg-2">
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    {% if vehicle %}
+                        <i class="fas fa-edit"></i> Edit Vehicle #{{ vehicle.id }}
+                    {% else %}
+                        <i class="fas fa-plus"></i> Create New Vehicle
+                    {% endif %}
+                </h3>
+            </div>
+            <div class="card-body">
+                <form id="vehicleForm" method="POST">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="color" class="form-label">
+                                <i class="fas fa-palette"></i> Color <span class="text-danger">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="color" 
+                                name="color"
+                                value="{{ vehicle.color if vehicle else '' }}"
+                                placeholder="e.g., Blue, Red, Black"
+                                required
+                                maxlength="50"
+                            >
+                            <small class="form-text text-muted">Vehicle color</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="year" class="form-label">
+                                <i class="fas fa-calendar"></i> Year <span class="text-danger">*</span>
+                            </label>
+                            <input 
+                                type="number" 
+                                class="form-control" 
+                                id="year" 
+                                name="year"
+                                value="{{ vehicle.year if vehicle else current_year }}"
+                                min="1900"
+                                max="{{ current_year }}"
+                                required
+                            >
+                            <small class="form-text text-muted">Manufacturing year</small>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <label for="make" class="form-label">
+                                <i class="fas fa-industry"></i> Make <span class="text-danger">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="make" 
+                                name="make"
+                                value="{{ vehicle.make if vehicle else '' }}"
+                                placeholder="e.g., Honda Civic, BMW X5, Toyota Camry"
+                                required
+                                maxlength="100"
+                            >
+                            <small class="form-text text-muted">Vehicle make and model</small>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="type" class="form-label">
+                                <i class="fas fa-car"></i> Type <span class="text-danger">*</span>
+                            </label>
+                            <select 
+                                class="form-select" 
+                                id="type" 
+                                name="type"
+                                required
+                            >
+                                <option value="">-- Select Vehicle Type --</option>
+                                {% for vtype in types %}
+                                    <option 
+                                        value="{{ vtype }}"
+                                        {% if vehicle and vehicle.type == vtype %}selected{% endif %}
+                                    >
+                                        {% if vtype == 'sedan' %}
+                                            🚗 Sedan
+                                        {% elif vtype == '4x4' %}
+                                            🚙 4x4
+                                        {% elif vtype == 'motorcycle' %}
+                                            🏍️ Motorcycle
+                                        {% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <small class="form-text text-muted">Vehicle category</small>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Note:</strong> All fields marked with <span class="text-danger">*</span> are required.
+                    </div>
+
+                    <div class="d-flex gap-2 justify-content-between">
+                        <a href="/" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            {% if vehicle %}
+                                <i class="fas fa-save"></i> Update Vehicle
+                            {% else %}
+                                <i class="fas fa-plus"></i> Create Vehicle
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Spinner Modal -->
+<div class="modal fade" id="loadingModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center py-5">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p>Processing your request...</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const vehicleForm = document.getElementById('vehicleForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+    const isEditMode = {{ 'true' if vehicle else 'false' }};
+    const vehicleId = {{ vehicle.id if vehicle else 'null' }};
+
+    vehicleForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        // Validate form
+        if (!vehicleForm.checkValidity()) {
+            vehicleForm.classList.add('was-validated');
+            return;
+        }
+
+        // Collect form data
+        const formData = {
+            color: document.getElementById('color').value.trim(),
+            year: parseInt(document.getElementById('year').value),
+            make: document.getElementById('make').value.trim(),
+            type: document.getElementById('type').value
+        };
+
+        // Validate color
+        if (!formData.color) {
+            alert('Please enter a color');
+            return;
+        }
+
+        // Validate year
+        if (formData.year < 1900 || formData.year > {{ current_year }}) {
+            alert(`Year must be between 1900 and {{ current_year }}`);
+            return;
+        }
+
+        // Show loading
+        loadingModal.show();
+        submitBtn.disabled = true;
+
+        try {
+            const url = isEditMode ? `/api/vehicles/${vehicleId}` : '/api/vehicles';
+            const method = isEditMode ? 'PUT' : 'POST';
+
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            loadingModal.hide();
+
+            if (data.success) {
+                const successMsg = isEditMode 
+                    ? '✓ Vehicle updated successfully!' 
+                    : '✓ Vehicle created successfully!';
+                
+                alert(successMsg);
+                window.location.href = '/';
+            } else {
+                alert('✗ Error: ' + (data.error || 'Unknown error'));
+                submitBtn.disabled = false;
+            }
+        } catch (error) {
+            loadingModal.hide();
+            console.error('Form submission error:', error);
+            alert('✗ Error: ' + error.message);
+            submitBtn.disabled = false;
+        }
+    });
+
+    // Form validation feedback
+    vehicleForm.addEventListener('change', function(e) {
+        if (vehicleForm.classList.contains('was-validated')) {
+            e.target.classList.add('is-valid');
+        }
+    });
+
+    // Prevent multiple submissions
+    submitBtn.addEventListener('click', function() {
+        if (submitBtn.disabled) {
+            event.preventDefault();
+        }
+    });
+</script>
+{% endblock %}
