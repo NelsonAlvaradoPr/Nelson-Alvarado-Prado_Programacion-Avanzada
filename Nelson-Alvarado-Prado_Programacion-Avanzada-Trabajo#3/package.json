@@ -1,0 +1,51 @@
+{
+  "name": "car-park-rest-api",
+  "version": "1.0.0",
+  "description": "Complete REST API for car park database management system with CRUD and query operations",
+  "main": "api-server.js",
+  "scripts": {
+    "start": "node api-server.js",
+    "dev": "nodemon api-server.js",
+    "test": "node api-examples.js",
+    "test:examples": "node api-examples.js",
+    "health": "curl http://localhost:3000/api/health",
+    "endpoints": "curl http://localhost:3000/api/endpoints",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "keywords": [
+    "car-park",
+    "parking",
+    "rest-api",
+    "express",
+    "crud",
+    "database",
+    "parking-management"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mysql2": "^3.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.47.0",
+    "nodemon": "^3.0.1",
+    "prettier": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/car-park-api"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/car-park-api/issues"
+  },
+  "homepage": "https://github.com/your-username/car-park-api#readme"
+}

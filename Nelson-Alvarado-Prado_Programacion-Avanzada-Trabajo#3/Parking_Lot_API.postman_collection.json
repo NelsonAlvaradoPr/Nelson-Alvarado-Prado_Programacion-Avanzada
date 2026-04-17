@@ -1,0 +1,836 @@
+{
+  "info": {
+    "_postman_id": "parking-lot-api-collection",
+    "name": "Parking Lot REST API",
+    "description": "Complete collection for testing all 32 REST API endpoints\n\nIncluddes:\n- 10 Car endpoints\n- 9 Parking endpoints\n- 9 Car Entry endpoints\n- 2 System endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "🔧 System",
+      "item": [
+        {
+          "name": "Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response is success\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.equal(true);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List All Endpoints",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/endpoints",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "endpoints"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🚗 Cars",
+      "item": [
+        {
+          "name": "Create Car",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Response has car ID\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.id).to.exist;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"color\": \"Blue\", \"year\": 2023, \"make\": \"Honda\", \"type\": \"sedan\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cars",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cars"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Cars",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/cars",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cars"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Car by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/cars/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cars",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Cars by Color",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/cars/filter/color/Blue",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cars",
+                "filter",
+                "color",
+                "Blue"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Cars by Make",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/cars/filter/make/Honda",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cars",
+                "filter",
+                "make",
+                "Honda"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Cars by Type",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/cars/filter/type/sedan",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cars",
+                "filter",
+                "type",
+                "sedan"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Cars by Year Range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/cars/filter/year-range?min=2020&max=2025",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cars",
+                "filter",
+                "year-range"
+              ],
+              "query": [
+                {
+                  "key": "min",
+                  "value": "2020"
+                },
+                {
+                  "key": "max",
+                  "value": "2025"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Advanced Car Filter",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/cars/filter/advanced?color=Blue&type=sedan&minYear=2020",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cars",
+                "filter",
+                "advanced"
+              ],
+              "query": [
+                {
+                  "key": "color",
+                  "value": "Blue"
+                },
+                {
+                  "key": "type",
+                  "value": "sedan"
+                },
+                {
+                  "key": "minYear",
+                  "value": "2020"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Car",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"color\": \"Red\", \"year\": 2024, \"make\": \"Audi\", \"type\": \"sedan\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cars/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cars",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Car",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/cars/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cars",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🅿️ Parking",
+      "item": [
+        {
+          "name": "Create Parking",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"province_name\": \"Quebec\", \"name\": \"Downtown Parking\", \"hourly_rate\": 15.50}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/parking",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "parking"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Parking",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/parking",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "parking"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Parking by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/parking/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "parking",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Parking by Province",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/parking/filter/province/Quebec",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "parking",
+                "filter",
+                "province",
+                "Quebec"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Parking by Name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/parking/filter/name/Downtown",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "parking",
+                "filter",
+                "name",
+                "Downtown"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Parking by Rate Range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/parking/filter/rate-range?min=10&max=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "parking",
+                "filter",
+                "rate-range"
+              ],
+              "query": [
+                {
+                  "key": "min",
+                  "value": "10"
+                },
+                {
+                  "key": "max",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Advanced Parking Filter",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/parking/filter/advanced?province=Quebec&maxRate=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "parking",
+                "filter",
+                "advanced"
+              ],
+              "query": [
+                {
+                  "key": "province",
+                  "value": "Quebec"
+                },
+                {
+                  "key": "maxRate",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Parking",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"province_name\": \"Quebec\", \"name\": \"Downtown Plaza\", \"hourly_rate\": 18.50}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/parking/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "parking",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Parking",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/parking/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "parking",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🚙 Car Entry",
+      "item": [
+        {
+          "name": "Create Car Entry",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"parking_id\": 1, \"car_id\": 1, \"entry_date_time\": \"2024-01-15T08:30:00Z\", \"exit_date_time\": null}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/car-entry",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "car-entry"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Car Entries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/car-entry",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "car-entry"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Car Entry by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/car-entry/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "car-entry",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Entries by Parking",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/car-entry/filter/parking/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "car-entry",
+                "filter",
+                "parking",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Entries by Car Type",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/car-entry/filter/car-type/sedan",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "car-entry",
+                "filter",
+                "car-type",
+                "sedan"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Entries by Province",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/car-entry/filter/province/Quebec",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "car-entry",
+                "filter",
+                "province",
+                "Quebec"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Hourly Price",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/car-entry/price/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "car-entry",
+                "price",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Car Entry",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"parking_id\": 1, \"car_id\": 1, \"entry_date_time\": \"2024-01-15T08:30:00Z\", \"exit_date_time\": \"2024-01-15T12:30:00Z\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/car-entry/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "car-entry",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Car Entry",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/car-entry/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "car-entry",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ]
+}
