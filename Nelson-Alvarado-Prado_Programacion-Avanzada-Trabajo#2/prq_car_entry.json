@@ -1,0 +1,107 @@
+[
+  {
+    "sequential_number": 1,
+    "parking_id": 1,
+    "car_id": 1,
+    "entry_date_time": "2026-04-16 08:00:00",
+    "exit_date_time": "2026-04-16 12:30:00"
+  },
+  {
+    "sequential_number": 2,
+    "parking_id": 1,
+    "car_id": 2,
+    "entry_date_time": "2026-04-16 09:15:00",
+    "exit_date_time": "2026-04-16 18:45:00"
+  },
+  {
+    "sequential_number": 3,
+    "parking_id": 1,
+    "car_id": 3,
+    "entry_date_time": "2026-04-16 10:00:00",
+    "exit_date_time": null
+  },
+  {
+    "sequential_number": 4,
+    "parking_id": 1,
+    "car_id": 4,
+    "entry_date_time": "2026-04-17 07:30:00",
+    "exit_date_time": "2026-04-17 09:00:00"
+  },
+  {
+    "sequential_number": 5,
+    "parking_id": 1,
+    "car_id": 5,
+    "entry_date_time": "2026-04-17 08:45:00",
+    "exit_date_time": null
+  },
+  {
+    "sequential_number": 6,
+    "parking_id": 1,
+    "car_id": 1,
+    "entry_date_time": "2026-04-17 10:15:00",
+    "exit_date_time": "2026-04-17 14:30:00"
+  },
+  {
+    "sequential_number": 7,
+    "parking_id": 1,
+    "car_id": 2,
+    "entry_date_time": "2026-04-17 11:00:00",
+    "exit_date_time": null
+  },
+  {
+    "sequential_number": 8,
+    "parking_id": 1,
+    "car_id": 3,
+    "entry_date_time": "2026-04-17 12:30:00",
+    "exit_date_time": "2026-04-17 16:15:00"
+  },
+  {
+    "sequential_number": 9,
+    "parking_id": 2,
+    "car_id": 4,
+    "entry_date_time": "2026-04-16 06:45:00",
+    "exit_date_time": "2026-04-16 10:30:00"
+  },
+  {
+    "sequential_number": 10,
+    "parking_id": 2,
+    "car_id": 5,
+    "entry_date_time": "2026-04-16 11:20:00",
+    "exit_date_time": "2026-04-16 15:45:00"
+  },
+  {
+    "sequential_number": 11,
+    "parking_id": 2,
+    "car_id": 1,
+    "entry_date_time": "2026-04-17 06:00:00",
+    "exit_date_time": null
+  },
+  {
+    "sequential_number": 12,
+    "parking_id": 2,
+    "car_id": 2,
+    "entry_date_time": "2026-04-17 08:30:00",
+    "exit_date_time": "2026-04-17 13:00:00"
+  },
+  {
+    "sequential_number": 13,
+    "parking_id": 2,
+    "car_id": 3,
+    "entry_date_time": "2026-04-17 09:45:00",
+    "exit_date_time": "2026-04-17 11:30:00"
+  },
+  {
+    "sequential_number": 14,
+    "parking_id": 2,
+    "car_id": 4,
+    "entry_date_time": "2026-04-17 10:00:00",
+    "exit_date_time": null
+  },
+  {
+    "sequential_number": 15,
+    "parking_id": 2,
+    "car_id": 5,
+    "entry_date_time": "2026-04-17 14:15:00",
+    "exit_date_time": "2026-04-17 17:45:00"
+  }
+]
