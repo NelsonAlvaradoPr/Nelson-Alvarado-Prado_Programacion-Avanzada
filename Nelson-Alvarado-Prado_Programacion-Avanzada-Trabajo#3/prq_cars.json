@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "color": "Red",
+    "year": 2020,
+    "make": "Toyota Corolla",
+    "type": "sedan"
+  },
+  {
+    "id": 2,
+    "color": "Black",
+    "year": 2019,
+    "make": "BMW X5",
+    "type": "4x4"
+  },
+  {
+    "id": 3,
+    "color": "White",
+    "year": 2022,
+    "make": "Yamaha MT-07",
+    "type": "motorcycle"
+  },
+  {
+    "id": 4,
+    "color": "Silver",
+    "year": 2021,
+    "make": "Mercedes-Benz C-Class",
+    "type": "sedan"
+  },
+  {
+    "id": 5,
+    "color": "Blue",
+    "year": 2018,
+    "make": "Land Rover Discovery",
+    "type": "4x4"
+  }
+]

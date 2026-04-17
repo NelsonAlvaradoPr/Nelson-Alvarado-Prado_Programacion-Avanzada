@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "province_name": "Madrid",
+    "name": "Parking Centro Plaza Mayor",
+    "hourly_rate": 3.50
+  },
+  {
+    "id": 2,
+    "province_name": "Barcelona",
+    "name": "Parking Diagonal Mar",
+    "hourly_rate": 2.75
+  }
+]
