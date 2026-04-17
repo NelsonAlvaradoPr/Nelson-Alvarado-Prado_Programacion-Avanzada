@@ -1,0 +1,117 @@
+@using VehicleMvcApp.Models;
+@model ParkingSearchViewModel
+
+@if (Model.SelectedVehicle != null && Model.ParkingEntries != null && Model.ParkingEntries.Count > 0)
+{
+    <div class="card mt-4 shadow">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-history"></i> Parking History for @Model.SelectedVehicle.Make (@Model.SelectedVehicle.Year)
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <!-- Summary Stats -->
+            <div class="row g-0 border-bottom">
+                <div class="col-md-4 p-3 border-end">
+                    <div class="text-center">
+                        <h6 class="text-muted mb-1">Total Entries</h6>
+                        <h3 class="text-primary fw-bold">@Model.ParkingEntries.Count</h3>
+                    </div>
+                </div>
+                <div class="col-md-4 p-3 border-end">
+                    <div class="text-center">
+                        <h6 class="text-muted mb-1">Currently Parked</h6>
+                        <h3 class="text-warning fw-bold">@Model.ParkingEntries.Count(e => e.IsCurrentlyParked)</h3>
+                    </div>
+                </div>
+                <div class="col-md-4 p-3">
+                    <div class="text-center">
+                        <h6 class="text-muted mb-1">Total Revenue</h6>
+                        <h3 class="text-success fw-bold">${@Model.ParkingEntries.Sum(e => e.AmountDue):F2}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Entries Table -->
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Parking Lot</th>
+                            <th>Entry Date/Time</th>
+                            <th>Exit Date/Time</th>
+                            <th class="text-end">Duration (min)</th>
+                            <th class="text-end">Duration (hrs)</th>
+                            <th class="text-end">Amount Due</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var entry in Model.ParkingEntries)
+                        {
+                            var isActive = entry.IsCurrentlyParked;
+                            var rowClass = isActive ? "table-warning" : "";
+                            
+                            <tr class="@rowClass">
+                                <td>
+                                    <strong>@entry.EntryNumber</strong>
+                                </td>
+                                <td>
+                                    <div>
+                                        <strong>@entry.ParkingLotName</strong><br />
+                                        <small class="text-muted">@entry.ParkingLotProvince (ID: @entry.ParkingLotId)</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <small>@entry.EntryDateTimeFormatted</small>
+                                </td>
+                                <td>
+                                    @if (entry.IsCurrentlyParked)
+                                    {
+                                        <span class="badge bg-warning">Still Parked</span>
+                                    }
+                                    else
+                                    {
+                                        <small>@entry.ExitDateTimeFormatted</small>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <strong>@entry.StayDurationMinutes</strong>
+                                </td>
+                                <td class="text-end">
+                                    <strong>@entry.StayDurationHours</strong>
+                                </td>
+                                <td class="text-end">
+                                    <strong class="@(entry.AmountDue > 0 ? "text-success" : "text-muted")">
+                                        @if (entry.AmountDue > 0)
+                                        {
+                                            <span>${@entry.AmountDue:F2}</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Pending</span>
+                                        }
+                                    </strong>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else if (Model.SelectedVehicle != null && (Model.ParkingEntries == null || Model.ParkingEntries.Count == 0))
+{
+    <div class="alert alert-info mt-4">
+        <i class="fas fa-info-circle"></i> 
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            @Model.Message
+        }
+        else
+        {
+            <span>No parking entries found for this vehicle.</span>
+        }
+    </div>
+}

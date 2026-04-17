@@ -25,11 +25,15 @@ if (useDatabase)
 {
     Console.WriteLine("🗄️ Registering DatabaseVehicleRepository");
     builder.Services.AddScoped<IVehicleRepository, DatabaseVehicleRepository>();
+    Console.WriteLine("🗄️ Registering DatabaseParkingRepository");
+    builder.Services.AddScoped<IParkingRepository, DatabaseParkingRepository>();
 }
 else
 {
     Console.WriteLine("📄 Registering JsonVehicleRepository");
     builder.Services.AddScoped<IVehicleRepository, JsonVehicleRepository>();
+    Console.WriteLine("📄 Registering JsonParkingRepository");
+    builder.Services.AddScoped<IParkingRepository, JsonParkingRepository>();
 }
 
 var app = builder.Build();
