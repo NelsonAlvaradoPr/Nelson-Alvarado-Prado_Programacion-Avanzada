@@ -1,12 +1,5 @@
 [
   {
-    "id": 1,
-    "color": "Red",
-    "year": 2020,
-    "make": "Toyota Corolla",
-    "type": "sedan"
-  },
-  {
     "id": 2,
     "color": "Black",
     "year": 2019,
@@ -33,5 +26,12 @@
     "year": 2018,
     "make": "Land Rover Discovery",
     "type": "4x4"
+  },
+  {
+    "id": 6,
+    "color": "Blue",
+    "year": 2023,
+    "make": "Honda",
+    "type": "sedan"
   }
 ]

@@ -1,12 +1,5 @@
 [
   {
-    "sequential_number": 1,
-    "parking_id": 1,
-    "car_id": 1,
-    "entry_date_time": "2026-04-16 08:00:00",
-    "exit_date_time": "2026-04-16 12:30:00"
-  },
-  {
     "sequential_number": 2,
     "parking_id": 1,
     "car_id": 2,
@@ -103,5 +96,12 @@
     "car_id": 5,
     "entry_date_time": "2026-04-17 14:15:00",
     "exit_date_time": "2026-04-17 17:45:00"
+  },
+  {
+    "sequential_number": 16,
+    "parking_id": 1,
+    "car_id": 1,
+    "entry_date_time": "2024-01-15T08:30:00Z",
+    "exit_date_time": null
   }
 ]
